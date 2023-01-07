@@ -1,12 +1,15 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { IBlogData } from "./common/common";
-import { blogdataState, pageTypeState } from "./common/store";
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { IBlogData, PageType } from './common/common';
+import { blogdataState, pageTypeState, readPageIndexState, updatePageIndexState } from './common/store';
 
 export const List: React.FC = () => {
    const setPageType = useSetRecoilState(pageTypeState);
+   const setReadPageIndex = useSetRecoilState(readPageIndexState);
+   const setUpdatePageIndex = useSetRecoilState(updatePageIndexState);
+
    const [blogData, setblogData] = useRecoilState(blogdataState);
 
    const Td = styled.td`
@@ -15,10 +18,14 @@ export const List: React.FC = () => {
    `;
 
    const Button = styled.button`
+      pading: 10px;
       width: 100px;
    `;
 
-   const onClickWrite = () => {};
+   const onClickWrite = () => {
+      setPageType(PageType.Write);
+      setUpdatePageIndex(-1);
+   };
 
    const onClickContent = (data: IBlogData) => {
       let newData: IBlogData[] = [...blogData];
@@ -27,7 +34,9 @@ export const List: React.FC = () => {
          1,
          { ...data, count: data.count! + 1 }
       );
+      setReadPageIndex(data.index);
       setblogData(newData);
+      setPageType(PageType.Read);
    };
    return (
       <div
@@ -58,47 +67,51 @@ export const List: React.FC = () => {
                border-collapse: collapse;
             `}
          >
-            <tr
-               css={css`
-                  border: 1px solid #000;
-                  height: 50px;
-                  font-weight: bold;
-               `}
-            >
-               <Td>번호</Td>
-               <Td>제목</Td>
-               <Td>글쓴이</Td>
-               <Td>조회수</Td>
-            </tr>
-            {blogData.map((value, index) => (
+            <thead>
                <tr
-                  key={index}
                   css={css`
-                     border-bottom: 1px solid #000;
-                     height: 30px;
+                     border: 1px solid #000;
+                     height: 50px;
+                     font-weight: bold;
                   `}
                >
-                  <Td>{value.index}</Td>
-                  <Td>
-                     <a
-                        css={css`
-                           text-decoration: none;
-                           color: black;
-                           cursor: pointer;
-                           &:hover {
-                              color: #e0e0e0;
-                              font-weight: bold;
-                           }
-                        `}
-                        onClick={() => onClickContent(value)}
-                     >
-                        {value.subject}
-                     </a>
-                  </Td>
-                  <Td>{value.writer}</Td>
-                  <Td>{value.count}</Td>
+                  <Td>번호</Td>
+                  <Td>제목</Td>
+                  <Td>글쓴이</Td>
+                  <Td>조회수</Td>
                </tr>
-            ))}
+            </thead>
+            <tbody>
+               {blogData.map((value, index) => (
+                  <tr
+                     key={index}
+                     css={css`
+                        border-bottom: 1px solid #000;
+                        height: 30px;
+                     `}
+                  >
+                     <Td>{value.index}</Td>
+                     <Td>
+                        <a
+                           css={css`
+                              text-decoration: none;
+                              color: black;
+                              cursor: pointer;
+                              &:hover {
+                                 color: #e0e0e0;
+                                 font-weight: bold;
+                              }
+                           `}
+                           onClick={() => onClickContent(value)}
+                        >
+                           {value.subject}
+                        </a>
+                     </Td>
+                     <Td>{value.writer}</Td>
+                     <Td>{value.count}</Td>
+                  </tr>
+               ))}
+            </tbody>
          </table>
       </div>
    );

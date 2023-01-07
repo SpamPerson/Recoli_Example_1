@@ -22,3 +22,8 @@ export const enum PageType {
     Read = 'read',
     Write = 'write',
 }
+
+export const enum NextAndPrev {
+    Next = 'next',
+    Prev = 'prev',
+}
