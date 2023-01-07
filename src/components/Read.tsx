@@ -78,7 +78,12 @@ export const Read: React.FC<PRead> = (props) => {
       setUpdatePageIndex(blog?.index!);
    };
 
-   const onClickDelete = () => {};
+   const onClickDelete = () => {
+    let newDatas:IBlogData[]=[...blogDatas];
+    newDatas.splice(newDatas.findIndex(element => element.index === props.index),1);
+    setblogDatas(newDatas);
+    setPageType(PageType.List);
+   };
 
    return (
       <div

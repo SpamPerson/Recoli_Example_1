@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { IBlogData, PageType } from './common/common';
 import { blogdataState, pageTypeState, readPageIndexState } from './common/store';
 
@@ -58,8 +58,11 @@ export const Write: React.FC<PWrite> = (props) => {
          setPageType(PageType.Read);
       } else {
          let newDatas: IBlogData[] = [...blogDatas];
+         let newIndex = newDatas[newDatas.length-1].index+1;
+         console.log(newIndex);
+         console.log(newDatas);
          const data: IBlogData = {
-             index:newDatas.length + 1,
+             index:newIndex,
              content: content,
              count:0,
              subject:subject,
